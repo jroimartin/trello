@@ -19,8 +19,9 @@ usage: t [flags] title description
 
 It also allows to specify several "contexts", as well as one "list", in the
 description field using the following format:
-	- @Label
-	- ^List
+
+- @Label
+- ^List
 
 E.g.: t "Add examples" "Add examples in the documentation @dev @home ^Today"
 

@@ -6,7 +6,7 @@ Trello client for Go.
 
 ## cmd/t
 
-t is a CLI that allows to add tasks into GTD boards in trello.
+t is a CLI that allows to add tasks into trello.
 
 ### Installation
 
@@ -23,7 +23,7 @@ $ go get github.com/jroimartin/trello/cmd/t
 {
 	"key": "KEY",
 	"token": "TOKEN",
-	"gtd_board": "BOARD NAME"
+	"board": "BOARD NAME"
 }
 ```
 
@@ -38,7 +38,7 @@ usage: t [flags] title [description]
 	debug mode
 ```
 
-It also allows to specify several "contexts" (@ctx1 @ctx2), as well as one
+It also allows to specify several "labels" (@label1 @label2), as well as one
 "list" (^List), in the title. E.g.:
 
 ```

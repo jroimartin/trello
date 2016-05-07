@@ -4,7 +4,7 @@
 
 /*
 
-t is a CLI that allows to add tasks into GTD boards in trello.
+t is a CLI that allows to add tasks into trello.
 
 	usage: t [flags] title [description]
 	  -c string
@@ -12,7 +12,7 @@ t is a CLI that allows to add tasks into GTD boards in trello.
 	  -debug
 		debug mode
 
-It also allows to specify several "contexts" (@ctx1 @ctx2), as well as one
+It also allows to specify several "labels" (@label1 @label2), as well as one
 "list" (^List), in the title. E.g.:
 
 	t "Add examples @dev @home ^Today" "Add examples in the documentation"
@@ -22,7 +22,7 @@ The configuration file has the following format:
 	{
 		"key": "KEY",
 		"token": "TOKEN",
-		"gtd_board": "BOARD NAME"
+		"board": "BOARD NAME"
 	}
 
 */
@@ -43,9 +43,9 @@ import (
 )
 
 type trelloConfig struct {
-	Key      string `json:"key"`
-	Token    string `json:"token"`
-	GTDBoard string `json:"gtd_board"`
+	Key   string `json:"key"`
+	Token string `json:"token"`
+	Board string `json:"board"`
 }
 
 type taskAttr struct {
@@ -132,7 +132,7 @@ func addTask(title, desc string) error {
 	if err != nil {
 		return err
 	}
-	logf("found board %v: %v", cfg.GTDBoard, boardID)
+	logf("found board %v: %v", cfg.Board, boardID)
 
 	listID, err := getList(boardID, attr.list)
 	if err != nil {
@@ -152,7 +152,7 @@ func addTask(title, desc string) error {
 func extractAttr(str string) (string, taskAttr) {
 	attr := taskAttr{}
 
-	// get contexts
+	// get labels
 	re := regexp.MustCompile(`@(\w+)`)
 	labels := re.FindAllStringSubmatch(str, -1)
 	for _, l := range labels {
@@ -185,14 +185,14 @@ func getBoard() (string, error) {
 
 	id := ""
 	for _, b := range boards {
-		if b.Name == cfg.GTDBoard {
+		if b.Name == cfg.Board {
 			id = b.ID
 			break
 		}
 	}
 
 	if id == "" {
-		return "", fmt.Errorf("cannot find the board %v", cfg.GTDBoard)
+		return "", fmt.Errorf("cannot find the board %v", cfg.Board)
 	}
 
 	return id, nil

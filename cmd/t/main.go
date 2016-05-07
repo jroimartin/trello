@@ -12,7 +12,7 @@ t is a CLI that allows to add tasks into GTD boards in trello.
 	  -debug
 		debug mode
 
-It also allows to specify several "contexts" as well as one "list" in the
+It also allows to specify several "contexts", as well as one "list", in the
 description field using the following format:
 	- @Label
 	- ^List

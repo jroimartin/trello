@@ -23,7 +23,11 @@ description field using the following format:
 - @Label
 - ^List
 
-E.g.: t "Add examples" "Add examples in the documentation @dev @home ^Today"
+E.g.:
+
+```
+t "Add examples" "Add examples in the documentation @dev @home ^Today"
+```
 
 ## Installation
 

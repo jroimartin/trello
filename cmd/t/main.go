@@ -6,16 +6,16 @@
 
 t is a CLI that allows to add tasks into GTD boards in trello.
 
-	usage: t [flags] title description
+	usage: t [flags] title [description]
 	  -c string
 		config file (default: ~/.trc)
 	  -debug
 		debug mode
 
 It also allows to specify several "contexts" (@ctx1 @ctx2), as well as one
-"list" (^List), in the description. E.g.:
+"list" (^List), in the title. E.g.:
 
-	t "Add examples" "Add examples in the documentation @dev @home ^Today"
+	t "Add examples @dev @home ^Today" "Add examples in the documentation"
 
 The configuration file has the following format:
 
@@ -64,11 +64,21 @@ func main() {
 	flag.Usage = usage
 	flag.Parse()
 
-	if flag.NArg() != 2 {
+	title := ""
+	desc := ""
+	switch flag.NArg() {
+	case 1:
+		title = flag.Arg(0)
+	case 2:
+		title = flag.Arg(0)
+		desc = flag.Arg(1)
+	default:
 		usage()
 	}
-	title := flag.Arg(0)
-	desc := flag.Arg(1)
+
+	if title == "" {
+		usage()
+	}
 
 	path := *cfgFile
 	if *cfgFile == "" {
@@ -92,7 +102,7 @@ func main() {
 }
 
 func usage() {
-	fmt.Fprintln(os.Stderr, "usage: t [flags] title description")
+	fmt.Fprintln(os.Stderr, "usage: t [flags] title [description]")
 	flag.PrintDefaults()
 	os.Exit(2)
 }
@@ -115,7 +125,7 @@ func parseConfig(path string) (trelloConfig, error) {
 }
 
 func addTask(title, desc string) error {
-	desc, attr := extractAttr(desc)
+	title, attr := extractAttr(title)
 	logf("adding task %v - %v %+v", title, desc, attr)
 
 	boardID, err := getBoard()

@@ -31,7 +31,7 @@ $ go get github.com/jroimartin/trello/cmd/t
 
 ```
 $ t -h
-usage: t [flags] title description
+usage: t [flags] title [description]
   -c string
 	config file (default: ~/.trc)
   -debug
@@ -39,10 +39,10 @@ usage: t [flags] title description
 ```
 
 It also allows to specify several "contexts" (@ctx1 @ctx2), as well as one
-"list" (^List), in the description. E.g.:
+"list" (^List), in the title. E.g.:
 
 ```
-$ t "Add examples" "Add examples in the documentation @dev @home ^Today"
+$ t "Add examples @dev @home ^Today" "Add examples in the documentation"
 ```
 
 ## Disclaimer

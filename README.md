@@ -45,6 +45,9 @@ It also allows to specify several "labels" (@label1 @label2), as well as one
 $ t "Add examples @dev @home ^Today" "Add examples in the documentation"
 ```
 
+It is important to note that if no list is specified, "Inbox" is used by
+default.
+
 ## Disclaimer
 
 Right now, the trello package only implements those functions required by

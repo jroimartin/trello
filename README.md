@@ -26,7 +26,7 @@ description field using the following format:
 E.g.:
 
 ```
-t "Add examples" "Add examples in the documentation @dev @home ^Today"
+$ t "Add examples" "Add examples in the documentation @dev @home ^Today"
 ```
 
 ## Installation

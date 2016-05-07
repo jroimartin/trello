@@ -38,13 +38,8 @@ usage: t [flags] title description
 	debug mode
 ```
 
-It also allows to specify several "contexts", as well as one "list", in the
-description field using the following format:
-
-- @Label
-- ^List
-
-E.g.:
+It also allows to specify several "contexts" (@ctx1 @ctx2), as well as one
+"list" (^List), in the description. E.g.:
 
 ```
 $ t "Add examples" "Add examples in the documentation @dev @home ^Today"

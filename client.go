@@ -35,14 +35,14 @@ func NewClient(key, token string) *Client {
 }
 
 func (cli *Client) get(url string) ([]byte, error) {
-	return cli.doRequest("GET", url, nil)
+	return cli.do("GET", url, nil)
 }
 
 func (cli *Client) post(url string, body io.Reader) ([]byte, error) {
-	return cli.doRequest("POST", url, body)
+	return cli.do("POST", url, body)
 }
 
-func (cli *Client) doRequest(method, urlStr string, body io.Reader) ([]byte, error) {
+func (cli *Client) do(method, urlStr string, body io.Reader) ([]byte, error) {
 	params := url.Values{}
 	params.Add("key", cli.key)
 	params.Add("token", cli.token)

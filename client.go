@@ -115,7 +115,7 @@ func (cli *Client) Labels(boardID string) ([]Label, error) {
 	return labels, nil
 }
 
-// PushCards creates card in trello.
+// PushCard creates a new card in trello.
 func (cli *Client) PushCard(card Card) error {
 	url := fmt.Sprintf("%v/cards", trelloEndpoint)
 

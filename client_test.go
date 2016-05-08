@@ -7,29 +7,28 @@ package trello
 import (
 	"net/http"
 	"net/http/httptest"
-	"net/url"
 	"testing"
 )
 
 func TestClientDo(t *testing.T) {
 	checks := []struct {
 		query  string
-		values url.Values
+		values map[string]string
 	}{
 		{
 			"?p1=v1&p2=v2",
-			url.Values{
-				"key":   {"KEY"},
-				"token": {"TOKEN"},
-				"p1":    {"v1"},
-				"p2":    {"v2"},
+			map[string]string{
+				"key":   "KEY",
+				"token": "TOKEN",
+				"p1":    "v1",
+				"p2":    "v2",
 			},
 		},
 		{
 			"",
-			url.Values{
-				"key":   {"KEY"},
-				"token": {"TOKEN"},
+			map[string]string{
+				"key":   "KEY",
+				"token": "TOKEN",
 			},
 		},
 	}
@@ -38,9 +37,9 @@ func TestClientDo(t *testing.T) {
 		ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			for ck, cv := range c.values {
 				v := r.FormValue(ck)
-				if v != cv[0] {
+				if v != cv {
 					t.Errorf("query=%v, param=%v: want=%v, get=%v",
-						c.query, ck, cv[0], v)
+						c.query, ck, cv, v)
 				}
 			}
 		}))

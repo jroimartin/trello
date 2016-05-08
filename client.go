@@ -43,12 +43,17 @@ func (cli *Client) post(url string, body io.Reader) ([]byte, error) {
 }
 
 func (cli *Client) do(method, urlStr string, body io.Reader) ([]byte, error) {
-	params := url.Values{}
+	url, err := url.Parse(urlStr)
+	if err != nil {
+		return nil, err
+	}
+
+	params := url.Query()
 	params.Add("key", cli.key)
 	params.Add("token", cli.token)
-	url := fmt.Sprintf("%v?%v", urlStr, params.Encode())
+	url.RawQuery = params.Encode()
 
-	req, err := http.NewRequest(method, url, body)
+	req, err := http.NewRequest(method, url.String(), body)
 	if err != nil {
 		return nil, err
 	}

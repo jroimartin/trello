@@ -23,7 +23,8 @@ $ go get github.com/jroimartin/trello/cmd/t
 {
 	"key": "KEY",
 	"token": "TOKEN",
-	"board": "BOARD NAME"
+	"default_board": "BOARD_NAME",
+	"default_list": "LIST_NAME"
 }
 ```
 
@@ -38,15 +39,12 @@ usage: t [flags] title [description]
 	debug mode
 ```
 
-It also allows to specify several "labels" (@label1 @label2), as well as one
-"list" (^List), in the title. E.g.:
+It also allows to specify, within the title, several "labels" (@label1
+@label2), as well as one "board" (#board) and "list" (^List). E.g.:
 
 ```
-$ t "Add examples @dev @home ^Today" "Add examples in the documentation"
+$ t "Add examples @dev @home ^Today #GTD" "Add examples in the documentation"
 ```
-
-It is important to note that if no list is specified, "Inbox" is used by
-default.
 
 ## Disclaimer
 

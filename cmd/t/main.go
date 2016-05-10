@@ -12,20 +12,18 @@ t is a CLI that allows to add tasks into trello.
 	  -debug
 		debug mode
 
-It also allows to specify several "labels" (@label1 @label2), as well as one
-"list" (^List), in the title. E.g.:
+It also allows to specify, within the title, several "labels" (@label1
+@label2), as well as one "board" (#board) and "list" (^List). E.g.:
 
-	t "Add examples @dev @home ^Today" "Add examples in the documentation"
-
-It is important to note that if no list is specified, "Inbox" is used by
-default.
+	t "Add examples @dev @home ^Today #GTD" "Add examples in the documentation"
 
 The configuration file has the following format:
 
 	{
 		"key": "KEY",
 		"token": "TOKEN",
-		"board": "BOARD NAME"
+		"default_board": "BOARD_NAME",
+		"default_list": "LIST_NAME"
 	}
 
 */
@@ -46,14 +44,16 @@ import (
 )
 
 type trelloConfig struct {
-	Key   string `json:"key"`
-	Token string `json:"token"`
-	Board string `json:"board"`
+	Key          string `json:"key"`
+	Token        string `json:"token"`
+	DefaultBoard string `json:"default_board"`
+	DefaultList  string `json:"default_list"`
 }
 
 type taskAttr struct {
 	labels []string
 	list   string
+	board  string
 }
 
 var (
@@ -131,11 +131,11 @@ func addTask(title, desc string) error {
 	title, attr := extractAttr(title)
 	logf("adding task %v - %v %+v", title, desc, attr)
 
-	boardID, err := getBoard()
+	boardID, err := getBoard(attr.board)
 	if err != nil {
 		return err
 	}
-	logf("found board %v: %v", cfg.Board, boardID)
+	logf("found board %v: %v", attr.board, boardID)
 
 	listID, err := getList(boardID, attr.list)
 	if err != nil {
@@ -163,6 +163,18 @@ func extractAttr(str string) (string, taskAttr) {
 	}
 	str = re.ReplaceAllString(str, "")
 
+	// get board
+	re = regexp.MustCompile(`\#(\w+)`)
+	board := re.FindStringSubmatch(str)
+	if board != nil {
+		attr.board = board[1]
+	}
+	str = re.ReplaceAllString(str, "")
+
+	if attr.board == "" {
+		attr.board = cfg.DefaultBoard
+	}
+
 	// get list
 	re = regexp.MustCompile(`\^(\w+)`)
 	list := re.FindStringSubmatch(str)
@@ -172,13 +184,13 @@ func extractAttr(str string) (string, taskAttr) {
 	str = re.ReplaceAllString(str, "")
 
 	if attr.list == "" {
-		attr.list = "Inbox" // use the Inbox list by default
+		attr.list = cfg.DefaultList
 	}
 
 	return strings.TrimSpace(str), attr
 }
 
-func getBoard() (string, error) {
+func getBoard(board string) (string, error) {
 	cli := trello.NewClient(cfg.Key, cfg.Token)
 	boards, err := cli.Boards("me")
 	if err != nil {
@@ -188,14 +200,14 @@ func getBoard() (string, error) {
 
 	id := ""
 	for _, b := range boards {
-		if b.Name == cfg.Board {
+		if b.Name == board {
 			id = b.ID
 			break
 		}
 	}
 
 	if id == "" {
-		return "", fmt.Errorf("cannot find the board %v", cfg.Board)
+		return "", fmt.Errorf("cannot find the board %v", board)
 	}
 
 	return id, nil

@@ -153,11 +153,14 @@ func addTask(title, desc string) error {
 	}
 	logf("found list %v: %v", list, listID)
 
-	labelIDs, err := getLabels(boardID, attr.labels)
-	if err != nil {
-		return err
+	labelIDs := ""
+	if len(attr.labels) > 0 {
+		labelIDs, err = getLabels(boardID, attr.labels)
+		if err != nil {
+			return err
+		}
+		logf("found labels %v: %v", attr.labels, labelIDs)
 	}
-	logf("found labels %v: %v", attr.labels, labelIDs)
 
 	return pushCard(listID, title, desc, labelIDs)
 }

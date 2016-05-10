@@ -131,17 +131,27 @@ func addTask(title, desc string) error {
 	title, attr := extractAttr(title)
 	logf("adding task %v - %v %+v", title, desc, attr)
 
-	boardID, err := getBoard(attr.board)
-	if err != nil {
-		return err
+	board := attr.board
+	if board == "" {
+		board = cfg.DefaultBoard
 	}
-	logf("found board %v: %v", attr.board, boardID)
 
-	listID, err := getList(boardID, attr.list)
+	boardID, err := getBoard(board)
 	if err != nil {
 		return err
 	}
-	logf("found list %v: %v", attr.list, listID)
+	logf("found board %v: %v", board, boardID)
+
+	list := attr.list
+	if list == "" {
+		list = cfg.DefaultList
+	}
+
+	listID, err := getList(boardID, list)
+	if err != nil {
+		return err
+	}
+	logf("found list %v: %v", list, listID)
 
 	labelIDs, err := getLabels(boardID, attr.labels)
 	if err != nil {
@@ -155,36 +165,19 @@ func addTask(title, desc string) error {
 func extractAttr(str string) (string, taskAttr) {
 	attr := taskAttr{}
 
-	// get labels
-	re := regexp.MustCompile(`@(\w+)`)
-	labels := re.FindAllStringSubmatch(str, -1)
-	for _, l := range labels {
-		attr.labels = append(attr.labels, l[1])
-	}
+	re := regexp.MustCompile(`(@|#|\^)(\w+)`)
+	matches := re.FindAllStringSubmatch(str, -1)
 	str = re.ReplaceAllString(str, "")
 
-	// get board
-	re = regexp.MustCompile(`\#(\w+)`)
-	board := re.FindStringSubmatch(str)
-	if board != nil {
-		attr.board = board[1]
-	}
-	str = re.ReplaceAllString(str, "")
-
-	if attr.board == "" {
-		attr.board = cfg.DefaultBoard
-	}
-
-	// get list
-	re = regexp.MustCompile(`\^(\w+)`)
-	list := re.FindStringSubmatch(str)
-	if list != nil {
-		attr.list = list[1]
-	}
-	str = re.ReplaceAllString(str, "")
-
-	if attr.list == "" {
-		attr.list = cfg.DefaultList
+	for _, m := range matches {
+		switch m[1] {
+		case "@":
+			attr.labels = append(attr.labels, m[2])
+		case "#":
+			attr.board = m[2]
+		case "^":
+			attr.list = m[2]
+		}
 	}
 
 	return strings.TrimSpace(str), attr

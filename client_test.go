@@ -38,7 +38,7 @@ func TestClientDo(t *testing.T) {
 			for ck, cv := range c.values {
 				v := r.FormValue(ck)
 				if v != cv {
-					t.Errorf("query=%v, param=%v: want=%v, get=%v",
+					t.Errorf("query=%v, param=%v: want=%v, got=%v",
 						c.query, ck, cv, v)
 				}
 			}

@@ -30,6 +30,10 @@ func TestExtractAttr(t *testing.T) {
 			inStr:  "test str @label1 @label2 ^list1 ^list2 #board1 ^list3 #board2 @label3",
 			outStr: "test str", list: "list3", board: "board2", labels: "label1,label2,label3",
 		},
+		{
+			inStr:  "test str @ ^ # @label1 @label2 ^list1 #board1",
+			outStr: "test str @ ^ #", list: "list1", board: "board1", labels: "label1,label2",
+		},
 	}
 
 	for _, c := range checks {

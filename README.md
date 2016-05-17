@@ -53,11 +53,13 @@ If you want to call `t` from any application:
 1. Create a new service in Automator.
 2. Set `Service receives` `no input` in `any application`.
 3. Add a `Run Shell Script` component with the following content:
+
 	```sh
 	task=$(osascript -e 'Tell app "System Events" to display dialog "New task:" default answer ""' -e 'text returned of result')
 	[ -n "$task" ] && /path/to/t "$task"
 	exit 0
 	```
+
 4. Set a shortcut in `System Preferences > Keyboard > Shortcuts > Services`.
 
 ## Disclaimer

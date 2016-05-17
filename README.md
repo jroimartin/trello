@@ -48,7 +48,7 @@ $ t "Add examples @dev @home ^Today #GTD" "Add examples in the documentation"
 
 ### "Smart add" dialog for OSX users
 
-If you want to call `t` from any application:
+If you want to call `cmd/t` from any application:
 
 1. Create a new service in Automator.
 2. Set `Service receives` `no input` in `any application`.

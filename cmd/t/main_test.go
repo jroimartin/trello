@@ -56,6 +56,13 @@ func TestExtractAttr(t *testing.T) {
 			board:  "board1",
 			labels: "label1,label2",
 		},
+		{
+			input:  "@label1 ^list1 test str @label2 #board1",
+			output: "test str",
+			list:   "list1",
+			board:  "board1",
+			labels: "label1,label2",
+		},
 	}
 
 	for _, c := range checks {

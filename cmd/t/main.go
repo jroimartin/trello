@@ -173,7 +173,7 @@ func addTask(title, desc string) error {
 func extractAttr(str string) (string, taskAttr) {
 	attr := taskAttr{}
 
-	re := regexp.MustCompile(`(?: )(@|#|\^)(\w+)`)
+	re := regexp.MustCompile(`(?:^| )(@|#|\^)(\w+)`)
 	matches := re.FindAllStringSubmatch(str, -1)
 	str = re.ReplaceAllString(str, "")
 

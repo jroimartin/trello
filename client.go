@@ -42,8 +42,8 @@ func (cli *Client) post(url string, body io.Reader) ([]byte, error) {
 	return cli.do("POST", url, body)
 }
 
-func (cli *Client) do(method, urlStr string, body io.Reader) ([]byte, error) {
-	url, err := url.Parse(urlStr)
+func (cli *Client) do(method, urlstr string, body io.Reader) ([]byte, error) {
+	url, err := url.Parse(urlstr)
 	if err != nil {
 		return nil, err
 	}
@@ -66,7 +66,7 @@ func (cli *Client) do(method, urlStr string, body io.Reader) ([]byte, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("invalid status code (%v)", resp.StatusCode)
+		return nil, fmt.Errorf("invalid status code: %v", resp.StatusCode)
 	}
 
 	return ioutil.ReadAll(resp.Body)
@@ -120,8 +120,8 @@ func (cli *Client) Labels(boardID string) ([]Label, error) {
 	return labels, nil
 }
 
-// PushCard creates a new card in trello.
-func (cli *Client) PushCard(card Card) error {
+// CreateCard creates a new card in trello.
+func (cli *Client) CreateCard(card Card) error {
 	url := fmt.Sprintf("%v/cards", trelloEndpoint)
 
 	buf := &bytes.Buffer{}

@@ -268,7 +268,7 @@ func pushCard(listID, title, desc, labelIDs string) error {
 		IDLabels: labelIDs,
 	}
 
-	return tcli.PushCard(card)
+	return tcli.CreateCard(card)
 }
 
 func logf(format string, v ...interface{}) {

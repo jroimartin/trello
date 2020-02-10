@@ -16,8 +16,8 @@ func TestClientDo(t *testing.T) {
 		values map[string]string
 	}{
 		{
-			"?p1=v1&p2=v2",
-			map[string]string{
+			query: "?p1=v1&p2=v2",
+			values: map[string]string{
 				"key":   "KEY",
 				"token": "TOKEN",
 				"p1":    "v1",
@@ -25,8 +25,8 @@ func TestClientDo(t *testing.T) {
 			},
 		},
 		{
-			"",
-			map[string]string{
+			query: "",
+			values: map[string]string{
 				"key":   "KEY",
 				"token": "TOKEN",
 			},
@@ -38,7 +38,7 @@ func TestClientDo(t *testing.T) {
 			for ck, cv := range c.values {
 				v := r.FormValue(ck)
 				if v != cv {
-					t.Errorf("query=%v, param=%v: want=%v, got=%v",
+					t.Errorf("wrong form value: query=%v, param=%v, want=%v, got=%v",
 						c.query, ck, cv, v)
 				}
 			}

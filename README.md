@@ -1,6 +1,6 @@
 # Trello Client
 
-[![GoDoc](https://godoc.org/github.com/jroimartin/trello?status.svg)](https://godoc.org/github.com/jroimartin/trello)
+[![GoDoc](https://img.shields.io/static/v1?label=godoc&message=reference&color=blue)](https://pkg.go.dev/github.com/jroimartin/trello)
 
 Trello client for Go.
 

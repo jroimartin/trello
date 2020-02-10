@@ -61,6 +61,8 @@ var (
 	debug   = flag.Bool("debug", false, "debug mode")
 
 	cfg trelloConfig
+
+	tcli *trello.Client
 )
 
 func main() {
@@ -77,10 +79,12 @@ func main() {
 		desc = flag.Arg(1)
 	default:
 		usage()
+		os.Exit(2)
 	}
 
 	if title == "" {
 		usage()
+		os.Exit(2)
 	}
 
 	path := *cfgFile
@@ -99,6 +103,8 @@ func main() {
 		log.Fatalln(err)
 	}
 
+	tcli = trello.NewClient(cfg.Key, cfg.Token)
+
 	if err = addTask(title, desc); err != nil {
 		log.Fatalln(err)
 	}
@@ -107,7 +113,6 @@ func main() {
 func usage() {
 	fmt.Fprintln(os.Stderr, "usage: t [flags] title [description]")
 	flag.PrintDefaults()
-	os.Exit(2)
 }
 
 func parseConfig(path string) (trelloConfig, error) {
@@ -187,8 +192,7 @@ func extractAttr(str string) (string, taskAttr) {
 }
 
 func getBoard(board string) (string, error) {
-	cli := trello.NewClient(cfg.Key, cfg.Token)
-	boards, err := cli.Boards("me")
+	boards, err := tcli.Boards("me")
 	if err != nil {
 		return "", err
 	}
@@ -210,8 +214,7 @@ func getBoard(board string) (string, error) {
 }
 
 func getList(boardID, list string) (string, error) {
-	cli := trello.NewClient(cfg.Key, cfg.Token)
-	lists, err := cli.Lists(boardID)
+	lists, err := tcli.Lists(boardID)
 	if err != nil {
 		return "", err
 	}
@@ -233,8 +236,7 @@ func getList(boardID, list string) (string, error) {
 }
 
 func getLabels(boardID string, labels []string) (string, error) {
-	cli := trello.NewClient(cfg.Key, cfg.Token)
-	rlabels, err := cli.Labels(boardID)
+	rlabels, err := tcli.Labels(boardID)
 	if err != nil {
 		return "", err
 	}
@@ -266,8 +268,7 @@ func pushCard(listID, title, desc, labelIDs string) error {
 		IDLabels: labelIDs,
 	}
 
-	cli := trello.NewClient(cfg.Key, cfg.Token)
-	return cli.PushCard(card)
+	return tcli.PushCard(card)
 }
 
 func logf(format string, v ...interface{}) {
